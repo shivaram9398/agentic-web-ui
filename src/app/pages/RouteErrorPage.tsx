@@ -1,16 +1,18 @@
+import { useLocale } from '../../i18n/locale-context'
 import { isRouteErrorResponse, useRouteError } from 'react-router'
 
 export default function RouteErrorPage() {
+  const { t } = useLocale()
   const error: unknown = useRouteError()
 
   const title = isRouteErrorResponse(error)
-    ? `Request failed (${error.status})`
-    : 'Something went wrong'
+    ? `${t('routeError.failed')} (${error.status})`
+    : t('routeError.unexpected')
 
   return (
     <main>
       <h1>{title}</h1>
-      <p>We couldn’t display this page. Please try again.</p>
+      <p>{t('routeError.displayError')}</p>
 
       <button
         type="button"
@@ -18,11 +20,11 @@ export default function RouteErrorPage() {
           window.location.reload()
         }}
       >
-        Reload page
+        {t('routeError.reload')}
       </button>
 
       <p>
-        <a href="/">Return home</a>
+        <a href="/">{t('routeError.errorReturnHome')}</a>
       </p>
     </main>
   )
