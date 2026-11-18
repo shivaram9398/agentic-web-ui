@@ -1,3 +1,4 @@
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material'
 import LanguagePicker from '../../i18n/LanguagePicker'
 import { useLocale } from '../../i18n/locale-context'
 import { Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
@@ -25,24 +26,49 @@ export default function AppLayout() {
   }
   return (
     <>
-      <header className="app-header">
-        <p>Agentic Meetings Manager</p>
+      <AppBar
+        position="static"
+        color="inherit"
+        elevation={0}
+        sx={{ borderBottom: 1, borderColor: 'divider' }}
+      >
+        <Container maxWidth="lg">
+          <Toolbar disableGutters sx={{ flexWrap: 'wrap', gap: { xs: 1, sm: 2 }, py: 1 }}>
+            <Typography sx={{ fontWeight: 700, width: { xs: '100%', md: 'auto' } }}>
+              Agentic Meetings Manager
+            </Typography>
+            <Box
+              component="nav"
+              aria-label={t('navigation.navigation')}
+              sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+            >
+              <Button
+                component={NavLink}
+                to="/"
+                end
+                sx={{ '&.active': { bgcolor: 'action.selected' } }}
+              >
+                {t('navigation.home')}
+              </Button>
+              <Button
+                component={NavLink}
+                to="/meetings"
+                sx={{ '&.active': { bgcolor: 'action.selected' } }}
+              >
+                {t('navigation.meetings')}
+              </Button>
+              <Button onClick={handleSignOut}>{t('navigation.signOut')}</Button>
+            </Box>
+            <Box sx={{ ml: { xs: 0, sm: 'auto' }, maxWidth: '100%' }}>
+              <LanguagePicker />
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-        <nav aria-label={t('navigation.navigation')}>
-          <NavLink to="/" end>
-            {t('navigation.home')}
-          </NavLink>
-          <NavLink to="/meetings">{t('navigation.meetings')}</NavLink>
-          <button type="button" onClick={handleSignOut}>
-            {t('navigation.signOut')}
-          </button>
-        </nav>
-        <LanguagePicker />
-      </header>
-
-      <main id="main-content">
+      <Container component="main" id="main-content" maxWidth="lg" sx={{ py: { xs: 2, sm: 4 } }}>
         <Outlet />
-      </main>
+      </Container>
     </>
   )
 }

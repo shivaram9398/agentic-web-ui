@@ -1,6 +1,6 @@
 import type { MessageKey } from '../../i18n/messages'
-import { requestJson } from '../../lib/http/client'
-import { HttpError } from '../../lib/http/http-error'
+import requestJson from '../../lib/http/client'
+import HttpError from '../../lib/http/http-error'
 
 type Credentials = { email: string; password: string }
 

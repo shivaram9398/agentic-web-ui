@@ -1,3 +1,12 @@
+import {
+  Alert,
+  Box,
+  Button,
+  InputAdornment,
+  Link as MuiLink,
+  TextField,
+  Typography,
+} from '@mui/material'
 import type { MessageKey } from '../../i18n/messages'
 import LanguagePicker from '../../i18n/LanguagePicker'
 import { useLocale } from '../../i18n/locale-context'
@@ -76,8 +85,8 @@ function AuthForm({ registering }: { registering: boolean }) {
   }
 
   return (
-    <main className="auth-shell">
-      <section className="auth-intro" aria-label="Agentic Meetings Manager">
+    <Box component="main" className="auth-shell">
+      <Box component="section" className="auth-intro" aria-label="Agentic Meetings Manager">
         <div className="auth-brand">
           <span className="auth-brand-mark" aria-hidden="true">
             ✳
@@ -103,73 +112,87 @@ function AuthForm({ registering }: { registering: boolean }) {
             </div>
           </div>
         </div>
-      </section>
+      </Box>
 
-      <section className="auth-content" aria-labelledby="auth-title">
+      <Box component="section" className="auth-content" aria-labelledby="auth-title">
         <div className="auth-form-wrap">
-          <LanguagePicker />
-          <h1 id="auth-title">{registering ? t('registration.createTitle') : t('login.signIn')}</h1>
-          <p className="auth-description">
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
+            <LanguagePicker />
+          </Box>
+          <Typography component="h1" id="auth-title">
+            {registering ? t('registration.createTitle') : t('login.signIn')}
+          </Typography>
+          <Typography color="text.secondary" sx={{ mt: 1, mb: 3 }}>
             {registering ? t('registration.getStarted') : t('login.signInIntro')}
-          </p>
+          </Typography>
           {!registering && state?.registered && (
-            <p className="auth-notice" role="status">
+            <Alert severity="success" role="status" sx={{ mb: 2 }}>
               {t('login.registered')}
-            </p>
+            </Alert>
           )}
-          <form noValidate onSubmit={(event) => void submit(event)} aria-busy={pending}>
-            <fieldset disabled={pending}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={(event) => void submit(event)}
+            aria-busy={pending}
+          >
+            <Box
+              component="fieldset"
+              disabled={pending}
+              sx={{ display: 'grid', gap: 2, border: 0, p: 0, m: 0, minWidth: 0 }}
+            >
               {registering && (
-                <label className="auth-field">
-                  {t('registration.name')}
-                  <input
-                    name="name"
-                    autoComplete="name"
-                    required
-                    pattern=".*\S.*"
-                    placeholder={t('registration.yourName')}
-                  />
-                </label>
-              )}
-              <label className="auth-field">
-                {t('auth.email')}
-                <input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                <TextField
+                  id="auth-name"
+                  name="name"
+                  label={t('registration.name')}
+                  autoComplete="name"
+                  disabled={pending}
                   required
-                  placeholder="you@example.com"
-                  defaultValue={state?.email}
+                  placeholder={t('registration.yourName')}
+                  slotProps={{ htmlInput: { pattern: '.*\\S.*' } }}
                 />
-              </label>
-              <div className="auth-field">
-                <label htmlFor="auth-password">{t('auth.password')}</label>
-                <div className="auth-password">
-                  <input
-                    id="auth-password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    autoComplete={registering ? 'new-password' : 'current-password'}
-                    required
-                    placeholder={
-                      registering ? t('registration.newPassword') : t('login.enterPassword')
-                    }
-                  />
-                  <button
-                    type="button"
-                    aria-label={t(showPassword ? 'auth.hidePassword' : 'auth.showPassword')}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {t(showPassword ? 'auth.hide' : 'auth.show')}
-                  </button>
-                </div>
-              </div>
-              {error && (
-                <p className="auth-error" role="alert">
-                  {t(error)}
-                </p>
               )}
-              <button className="auth-submit" type="submit">
+              <TextField
+                id="auth-email"
+                name="email"
+                label={t('auth.email')}
+                type="email"
+                autoComplete="email"
+                disabled={pending}
+                required
+                placeholder="you@example.com"
+                defaultValue={state?.email}
+              />
+              <TextField
+                id="auth-password"
+                name="password"
+                label={t('auth.password')}
+                type={showPassword ? 'text' : 'password'}
+                autoComplete={registering ? 'new-password' : 'current-password'}
+                disabled={pending}
+                required
+                placeholder={registering ? t('registration.newPassword') : t('login.enterPassword')}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button
+                          type="button"
+                          disabled={pending}
+                          size="small"
+                          aria-label={t(showPassword ? 'auth.hidePassword' : 'auth.showPassword')}
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {t(showPassword ? 'auth.hide' : 'auth.show')}
+                        </Button>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+              {error && <Alert severity="error">{t(error)}</Alert>}
+              <Button type="submit" variant="contained" loading={pending} size="large">
                 {pending
                   ? registering
                     ? t('registration.creating')
@@ -177,17 +200,21 @@ function AuthForm({ registering }: { registering: boolean }) {
                   : registering
                     ? t('registration.create')
                     : t('login.signIn')}
-              </button>
-            </fieldset>
-          </form>
-          <p className="auth-switch">
+              </Button>
+            </Box>
+          </Box>
+          <Typography align="center" color="text.secondary" variant="body2" sx={{ mt: 3 }}>
             {registering ? t('registration.existing') : t('login.newUser')}{' '}
-            <Link to={registering ? '/login' : '/register'} state={{ returnTo: state?.returnTo }}>
+            <MuiLink
+              component={Link}
+              to={registering ? '/login' : '/register'}
+              state={{ returnTo: state?.returnTo }}
+            >
               {registering ? t('login.signIn') : t('login.createLink')}
-            </Link>
-          </p>
+            </MuiLink>
+          </Typography>
         </div>
-      </section>
-    </main>
+      </Box>
+    </Box>
   )
 }
