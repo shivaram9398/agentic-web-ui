@@ -24,7 +24,7 @@ function parseApiBaseUrl(value: string | undefined): string {
     return url.href.replace(/\/+$/, '')
 }
 
-export const env = Object.freeze({
+export default Object.freeze({
     apiBaseUrl: parseApiBaseUrl(import.meta.env.VITE_API_BASE_URL),
     mode: import.meta.env.MODE,
 })

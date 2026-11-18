@@ -1,7 +1,7 @@
-import { env } from '../../config/env'
-import { HttpError } from './http-error'
+import env from '../../config/env'
+import HttpError from './http-error'
 
-export async function requestJson(
+export default async function requestJson(
     path: string,
     options: RequestInit = {},
 ): Promise<unknown> {

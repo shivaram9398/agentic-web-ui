@@ -1,29 +1,35 @@
+import { Alert, Button, Container, Stack, Typography } from '@mui/material'
+import { useLocale } from '../../i18n/locale-context'
 import { isRouteErrorResponse, useRouteError } from 'react-router'
 
 export default function RouteErrorPage() {
+  const { t } = useLocale()
   const error: unknown = useRouteError()
 
   const title = isRouteErrorResponse(error)
-    ? `Request failed (${error.status})`
-    : 'Something went wrong'
+    ? `${t('routeError.failed')} (${error.status})`
+    : t('routeError.unexpected')
 
   return (
-    <main>
-      <h1>{title}</h1>
-      <p>We couldn’t display this page. Please try again.</p>
+    <Container component="main" maxWidth="sm" sx={{ py: 4 }}>
+      <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
+        <Typography component="h1" variant="h4">
+          {title}
+        </Typography>
+        <Alert severity="error">{t('routeError.displayError')}</Alert>
 
-      <button
-        type="button"
-        onClick={() => {
-          window.location.reload()
-        }}
-      >
-        Reload page
-      </button>
+        <Button
+          variant="contained"
+          type="button"
+          onClick={() => {
+            window.location.reload()
+          }}
+        >
+          {t('routeError.reload')}
+        </Button>
 
-      <p>
-        <a href="/">Return home</a>
-      </p>
-    </main>
+        <Button href="/">{t('routeError.errorReturnHome')}</Button>
+      </Stack>
+    </Container>
   )
 }
